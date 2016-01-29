@@ -2,6 +2,11 @@ ActiveAdmin.register Facility do
 
   permit_params :name, :marc_field, :language, :entity, :help_text
 
+  scope :english
+  scope :german
+  scope :italian
+  scope :french
+
   form do |f|
     inputs 'Facility' do
       input :name
@@ -9,7 +14,7 @@ ActiveAdmin.register Facility do
       input :language, :as => :select, :collection => %w(English German French Italian)
       input :entity, :as => :select, :collection => %w(Source Person Institution Catalogue)
       input 'Reference', :as => :text, :input_html => {:value => resource.read_reference, :readonly => true }# resource.read_helpfile emd
-      input :help_text, :input_html => {:value => resource.read_helpfile }# resource.read_helpfile emd
+      input :help_text, :as => :html_editor, :input_html => {:value => resource.read_helpfile }# resource.read_helpfile emd
       actions
     end
   end

@@ -1,6 +1,11 @@
 class Facility < ActiveRecord::Base
   after_save :write_helpfile
 
+  scope :english, -> {where(:language => 'English')}
+  scope :german, -> {where(:language => 'German')}
+  scope :italian, -> {where(:language => 'Italian')}
+  scope :french, -> {where(:language => 'French')}
+
   def get_language_code(l)
     langs={"English" => 'en', "German" => 'de', "French" => "fr", "Italian" => "it"}
     return langs[l]

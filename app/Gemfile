@@ -90,3 +90,4 @@ gem 'activerecord-import', ">= 0.4.0"
 
 gem 'ruby-prof'
 gem 'pry', :group => :development
+gem 'active_admin_editor'

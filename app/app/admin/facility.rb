@@ -1,21 +1,19 @@
-ActiveAdmin.register Facility do
+ActiveAdmin.register Facility ,as: "Translation" do
 
-  permit_params :name, :marc_field, :language, :entity, :help_text
+  permit_params :marc_field_id, :language, :entity, :help_text
 
-  scope :english
   scope :german
   scope :italian
   scope :french
 
   form do |f|
-    inputs 'Facility' do
-      input :name
-      input :marc_field
-      input :language, :as => :select, :collection => %w(English German French Italian)
-      input :entity, :as => :select, :collection => %w(Source Person Institution Catalogue)
-      input 'Reference', :as => :text, :input_html => {:value => resource.read_reference, :readonly => true }# resource.read_helpfile emd
-      input :help_text, :as => :html_editor, :input_html => {:value => resource.read_helpfile }# resource.read_helpfile emd
-      actions
+    f.inputs 'Facility' do
+      f.input :marc_field, :as => :select, :include_blank => false
+      f.input :language, :as => :select, :collection => %w(German French Italian)
+      #input :entity, :as => :select, :collection => %w(Source Person Institution Catalogue)
+      f.input 'Reference', :as => :text, :input_html => {:value => resource.marc_field.read_helpfile, :readonly => true } if resource.marc_field
+      f.input :help_text, :as => :html_editor, :input_html => {:value => resource.read_helpfile } if resource.marc_field# resource.read_helpfile emd
+      f.actions
     end
   end
 

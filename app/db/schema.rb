@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160202081960) do
+ActiveRecord::Schema.define(version: 20160202111737) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20160202081960) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "marc_fields", force: true do |t|
+  create_table "originals", force: true do |t|
     t.string   "tag"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -73,10 +73,10 @@ ActiveRecord::Schema.define(version: 20160202081960) do
     t.text     "help_text"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "marc_field_id"
     t.string   "filename"
+    t.integer  "original_id"
   end
 
-  add_index "translations", ["marc_field_id"], name: "index_translations_on_marc_field_id", using: :btree
+  add_index "translations", ["original_id"], name: "index_translations_on_original_id", using: :btree
 
 end

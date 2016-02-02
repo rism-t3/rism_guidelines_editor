@@ -34,31 +34,38 @@ end
 files = Dir["#{App::HELP_FILES}*.html"]
 
 files.each do |file|
-  if file =~ /^\S*\/[0-9]{3}\S+$/
+  #if file =~ /^\S*\/[0-9]{3}\S+$/
     if get_lang(file) == 'en'
-      MarcField.create(:tag => get_marc(file), :helptext => File.read(file), :filename => file)
+      begin 
+        Original.create(:tag => get_name(file), :helptext => File.read(file), :filename => file)
+      rescue
+        puts file
+      end
     end
-  end
+  #end
 end
 
 files.each do |file|
   #Marc_Fields
-  if file =~ /^\S*\/[0-9]{3}\S+$/
+  #if file =~ /^\S*\/[0-9]{3}\S+$/
     if get_lang(file) != 'en'
-      Translation.create(:language => get_lang(file), :help_text => File.read(file), :marc_field_id => MarcField.where(:tag => get_marc(file)).take.id, :filename => file)
+      original = Original.where(:tag => get_name(file)).take
+      if original
+        Translation.create(:language => get_lang(file), :help_text => File.read(file), :original_id => original.id, :filename => file)
+      end
     end
     #uts get_marcfield(file)
   #Abbreviations
-  elsif file =~ /^\S*\/abbr_\S+$/
+  #elsif file =~ /^\S*\/abbr_\S+$/
     #uts file
-  elsif file =~ /^\S*\/aid_\S+$/
+  #elsif file =~ /^\S*\/aid_\S+$/
     #puts get_aid(file)
     #puts file
-  elsif file =~ /^\S*\/cat_\S+$/
+  #elsif file =~ /^\S*\/cat_\S+$/
     #puts file
-  else
+  #else
     #puts file
     #puts get_language(file)
     #puts get_name(file)
-  end
+  #end
 end

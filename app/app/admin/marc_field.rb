@@ -1,5 +1,5 @@
 ActiveAdmin.register MarcField do
-  permit_params :tag, :helptext, :facility
+  permit_params :tag, :helptext, :translation
 
   action_item :translate, only: :index do
       link_to 'translate', new_admin_translation_path
@@ -8,12 +8,13 @@ ActiveAdmin.register MarcField do
   index do
     column :tag
     column :translations do |r|
-      r.facilities.map(&:language).sort.join(", ")
+      r.translations.order(:language).each.map do |t|
+        link_to(t.language, edit_admin_translation_path(t)) 
+      end.join(', ').html_safe
     end
      actions defaults: true do |r|
-        link_to "Translate", new_admin_translation_path(:facility => { :marc_field_id => r.id })
+        link_to "Translate", new_admin_translation_path(:translation => { :marc_field_id => r.id })
        end
-    #ctions
   end
 
   form do |f|

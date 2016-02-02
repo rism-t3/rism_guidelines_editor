@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160129120952) do
+ActiveRecord::Schema.define(version: 20160202081960) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -46,7 +46,27 @@ ActiveRecord::Schema.define(version: 20160129120952) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "facilities", force: true do |t|
+  create_table "marc_fields", force: true do |t|
+    t.string   "tag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "helptext"
+    t.string   "filename"
+  end
+
+  create_table "rich_rich_images", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.string   "owner_type"
+    t.integer  "owner_id"
+    t.text     "uri_cache"
+  end
+
+  create_table "translations", force: true do |t|
     t.string   "language"
     t.string   "name"
     t.string   "entity"
@@ -54,15 +74,9 @@ ActiveRecord::Schema.define(version: 20160129120952) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "marc_field_id"
+    t.string   "filename"
   end
 
-  add_index "facilities", ["marc_field_id"], name: "index_facilities_on_marc_field_id", using: :btree
-
-  create_table "marc_fields", force: true do |t|
-    t.string   "tag"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "helptext"
-  end
+  add_index "translations", ["marc_field_id"], name: "index_translations_on_marc_field_id", using: :btree
 
 end

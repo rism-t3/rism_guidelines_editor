@@ -22,5 +22,6 @@ module App
   end
   HELP_FILES = "#{Rails.root.join("")}/../default/"
   IMAGE_FILES = "#{Rails.root.join("")}/public/"
+  LANGUAGES = %w(de es fr it)
 end
 

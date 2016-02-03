@@ -25,7 +25,9 @@ class Translation < ActiveRecord::Base
       self.original.touch
   end
 
-  def image
-    "#{App::IMAGE_FILES}arrow-right.png"
+  def is_outdated?
+    original_date = File.mtime(self.original.filename)
+    translation_date = File.mtime(self.filename)
+    original_date < translation_date ? false : true
   end
 end

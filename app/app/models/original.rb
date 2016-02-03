@@ -23,6 +23,10 @@ class Original < ActiveRecord::Base
     file.close
   end
 
+  def self.is_sync?
+    #riginal
+  end
+
 
 
 

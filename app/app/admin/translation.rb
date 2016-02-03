@@ -27,11 +27,12 @@ ActiveAdmin.register Translation do
   form do |f|
     f.inputs 'Translation' do
       f.input :original_id, :as => :hidden
-      if !f.object.new_record?
-        f.input :language, :as => :select, :collection => %w(de es fr it), :input_html => { :disabled=>true }, :include_blank => false
-      else
-        f.input :language, :as => :select, :collection => %w(de es fr it) - resource.original.translations.map(&:language), :include_blank => false
-      end
+      f.input :language, :as => :hidden
+      #if !f.object.new_record?
+      #  f.input :language, :as => :select, :collection => App::LANGUAGES, :input_html => { :disabled=>true }, :include_blank => false
+      #else
+      #  f.input :language, :as => :select, :collection => App::LANGUAGES - resource.original.translations.map(&:language), :include_blank => false
+      #end
       #input :entity, :as => :select, :collection => %w(Source Person Institution Catalogue)
       #f.input :reference_helptext, :as => :text, :input_html => {:style => 'background-color:#F5FFFA', :disabled => true, :readonly => true } if resource.marc_field
       f.input :reference_helptext, :as => :text if resource.original

@@ -1,20 +1,34 @@
-ActiveAdmin.register Original do
+ActiveAdmin.register Original, :as => 'Guideline' do
+  #scope :german
+  #scope :french
+  #scope :spanish
+  #scope :italian
+  #scope :all
   permit_params :tag, :helptext, :translation
 
-  action_item :translate, only: :index do
-      link_to 'translate', new_admin_translation_path
-  end
+  #action_item :translate, only: :index do
+  #    link_to 'translate', new_admin_translation_path
+  #end
+  config.sort_order = "updated_at_desc"
+
+  filter :tag
+  filter :helptext, :label => 'Guideline Text'
+  filter :translations_help_text_cont, :label => 'Translation Text'
+  filter :translations_language_cont, :label => 'Language', :as => :select, :collection => %w(de es fr it)
 
   index do
+    selectable_column
     column :tag
     column :translations do |r|
       r.translations.order(:language).each.map do |t|
-        link_to(t.language, edit_admin_translation_path(t)) 
-      end.join(', ').html_safe
+#        link_to(t.language, edit_admin_translation_path(t)) 
+        #
+        link_to image_tag("#{t.language}.png"), edit_admin_translation_path(t)
+      end.join(' ').html_safe
     end
-     actions defaults: true do |r|
+    actions defaults: true do |r|
         link_to "Translate", new_admin_translation_path(:translation => { :original_id => r.id })
-       end
+     end
   end
 
   form do |f|

@@ -21,5 +21,6 @@ module App
     # config.i18n.default_locale = :de
   end
   HELP_FILES = "#{Rails.root.join("")}/../default/"
+  IMAGE_FILES = "#{Rails.root.join("")}/public/"
 end
 

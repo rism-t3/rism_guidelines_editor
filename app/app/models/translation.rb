@@ -7,6 +7,9 @@ class Translation < ActiveRecord::Base
   scope :italian, -> {where(:language => 'it')}
   scope :french, -> {where(:language => 'fr')}
 
+  def to_s
+    "#{original.tag}_#{language}"
+  end
   def set_filename
     self.filename = "#{App::HELP_FILES}#{original.tag}_#{language}.html"
   end
@@ -19,6 +22,10 @@ class Translation < ActiveRecord::Base
       f = File.open(filename, "w")
       f.write(help_text)
       f.close
+      self.original.touch
   end
 
+  def image
+    "#{App::IMAGE_FILES}arrow-right.png"
+  end
 end

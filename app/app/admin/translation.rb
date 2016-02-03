@@ -14,12 +14,12 @@ ActiveAdmin.register Translation do
 
     def update
       update! do |format|
-        format.html { redirect_to admin_originals_path } if resource.valid?
+        format.html { redirect_to admin_guidelines_path } if resource.valid?
       end
     end
     def create
       create! do |format|
-         format.html { redirect_to admin_originals_path } if resource.valid?
+         format.html { redirect_to admin_guidelines_path } if resource.valid?
       end
     end
   end
@@ -42,7 +42,10 @@ ActiveAdmin.register Translation do
         f.input :help_text, :as => :html_editor, :input_html => {:value => File.read(resource.filename) } if resource.original# resource.read_helpfile emd
       end
 dd
-      f.actions
+      f.actions do
+        f.action(:submit)
+        f.cancel_link(admin_guidelines_path)
+      end
     end
   end
 

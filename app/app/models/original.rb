@@ -1,4 +1,8 @@
 class Original < ActiveRecord::Base
+  scope :spanish, -> {joins(:translations).where('translations.language="es"')}
+  scope :french, -> {joins(:translations).where('translations.language="fr"')}
+  scope :italian, -> {joins(:translations).where('translations.language="it"')}
+  scope :german, -> {joins(:translations).where('translations.language="de"')}
   after_save :write_helpfile
   before_create :set_filename
   has_many :translations

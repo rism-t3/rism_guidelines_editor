@@ -35,6 +35,7 @@ files = Dir["#{App::HELP_FILES}*.html"]
 
 files.each do |file|
   #if file =~ /^\S*\/[0-9]{3}\S+$/
+  next if get_name(file)=='header' || get_name(file)=='footer'
     if get_lang(file) == 'en'
       begin 
         Original.create(:tag => get_name(file), :helptext => File.read(file), :filename => file)
@@ -46,6 +47,7 @@ files.each do |file|
 end
 
 files.each do |file|
+  next if get_name(file)=='header' || get_name(file)=='footer'
   #Marc_Fields
   #if file =~ /^\S*\/[0-9]{3}\S+$/
     if get_lang(file) != 'en'

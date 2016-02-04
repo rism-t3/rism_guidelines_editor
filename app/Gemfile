@@ -91,6 +91,7 @@ gem 'activerecord-import', ">= 0.4.0"
 gem 'ruby-prof'
 gem 'pry', :group => :development
 gem 'active_admin_editor'
+gem 'diffy'
 #gem 'rich', github: 'bastiaanterhorst/rich'
 #gem 'rich', github: 'kreativgebiet/rich', ref: '3e92749ac77ee171bd6f0643d67b1579cc1c1271'
 #gem 'paperclip'

@@ -30,4 +30,10 @@ class Translation < ActiveRecord::Base
     translation_date = File.mtime(self.filename)
     original_date < translation_date ? false : true
   end
+
+  def diff_content
+    filecontent = File.read(filename)
+    modelcontent = help_text
+    Diffy::Diff.new(filecontent, modelcontent)
+  end
 end

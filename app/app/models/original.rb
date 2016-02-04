@@ -27,6 +27,16 @@ class Original < ActiveRecord::Base
     #riginal
   end
 
+  def has_diff_content?
+    File.read(filename)==helptext ? false : true
+  end
+  def diff_content
+    filecontent = File.read(filename)
+    modelcontent = helptext
+    Diffy::Diff.new(filecontent, modelcontent, :allow_empty_diff => false).to_s#(:html)
+  end
+
+
 
 
 

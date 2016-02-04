@@ -1,14 +1,26 @@
 ActiveAdmin.register Original, :as => 'Guideline' do
-  actions :all, :except => [:destroy, :show]
+
+  config.clear_action_items!
+  action_item :view, :if => proc { current_admin_user.can_edit?("en") } do
+          link_to 'New Guideline', new_admin_guideline_path
+    end
+  
   permit_params :tag, :helptext, :translation
 
   config.sort_order = "updated_at_desc"
 
-  filter :tag
-  filter :helptext, :label => 'Guideline Text'
-  filter :translations_help_text_cont, :label => 'Translation Text'
+  #ilter :helptext, :label => 'Guideline Text'
+  filter :helptext_or_translations_help_text_cont, :label => 'Guideline Text'
   filter :translations_language_cont, :label => 'Language', :as => :select, :collection => App::LANGUAGES
-
+  filter :tag
+  sidebar :help do
+    ul do
+      li "To edit a translation please click on flag icon at \"Edit\" column."
+      li "To create a new translation click on flag icon at \"Add New Translation\" column."
+      li "Flag blinking indicates that the reference guideline is newer than the existent translation."
+      li "A view of the reference guideline is provided by edit and create action."
+    end
+  end
   index do
     selectable_column
     column :tag
@@ -21,7 +33,11 @@ ActiveAdmin.register Original, :as => 'Guideline' do
         end
       end.unshift(
       if current_admin_user.can_edit?("en")
-        link_to image_tag("en.png", size: "16x16"), edit_admin_guideline_path(r)
+        if r.has_diff_content?
+          link_to image_tag("en.png", size: "16x16", :class => 'blink_image'), edit_admin_guideline_path(r)
+        else
+          link_to image_tag("en.png", size: "16x16"), edit_admin_guideline_path(r)
+        end
       end      
       ).join(' ').html_safe
     end
@@ -34,12 +50,22 @@ ActiveAdmin.register Original, :as => 'Guideline' do
   end
 
   form do |f|
+    #unless resource.diff_content.empty?
+
+     # panel 'diff' do
+       # div do
+      #         span resource.diff_content.html_safe
+        #  end
+       # end
+   # end
+
     inputs 'English' do
       input :tag
       if f.object.new_record?
         input :helptext, :as => :html_editor
       else
-        input :helptext, :as => :html_editor, :input_html => {:value => File.read(resource.filename) }# resource.read_helpfile em
+        input :helptext, :as => :html_editor, :input_html => {:value => resource.diff_content }# resource.read_helpfile em
+        #input :helptext, :as => :html_editor, :input_html => {:value => File.read(resource.filename) }# resource.read_helpfile em
       end
       actions 
     end

@@ -7,6 +7,8 @@ class Translation < ActiveRecord::Base
   scope :italian, -> {where(:language => 'it')}
   scope :french, -> {where(:language => 'fr')}
 
+  has_paper_trail
+
   def to_s
     "#{original.tag}_#{language}"
   end
@@ -20,7 +22,7 @@ class Translation < ActiveRecord::Base
 
   def write_helpfile
       f = File.open(filename, "w")
-      f.write(help_text)
+      f.write(content)
       f.close
       self.original.touch
   end
@@ -33,7 +35,7 @@ class Translation < ActiveRecord::Base
 
   def diff_content
     filecontent = File.read(filename)
-    modelcontent = help_text
+    modelcontent = content
     Diffy::Diff.new(filecontent, modelcontent)
   end
 end

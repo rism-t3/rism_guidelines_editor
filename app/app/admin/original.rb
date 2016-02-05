@@ -3,16 +3,34 @@ ActiveAdmin.register Original, :as => 'Guideline' do
   config.clear_action_items!
   action_item :view, :if => proc { current_admin_user.can_edit?("en") } do
           link_to 'New Guideline', new_admin_guideline_path
-    end
+  end
   
-  permit_params :tag, :helptext, :translation
+  permit_params :tag, :content, :translation
 
   config.sort_order = "updated_at_desc"
 
-  #ilter :helptext, :label => 'Guideline Text'
-  filter :helptext_or_translations_help_text_cont, :label => 'Guideline Text'
+  filter :content_or_translations_content_cont, :label => 'Guideline Text'
   filter :translations_language_cont, :label => 'Language', :as => :select, :collection => App::LANGUAGES
   filter :tag
+
+  controller do 
+    def update
+      #@versions = resource.versions
+      update! do |format|
+       format.html { redirect_to collection_path } if resource.valid?
+      end
+    end
+  end
+
+  sidebar :versions, :only => :edit do
+    table_for PaperTrail::Version.where(:item_id => resource.id).order('id desc').limit(5) do # Use PaperTrail::Version if this throws an error
+      column "Item" do  |v| link_to v.id, edit_admin_guideline_path(:version => v.id) end
+      column "Modified at" do |v| v.created_at.to_s :long end
+      column "Admin" do |v| link_to AdminUser.find(v.whodunnit).email, admin_admin_user_path(v.whodunnit) end
+      end
+    link_to "Return to current version", edit_admin_guideline_path
+  end
+
   sidebar :help do
     ul do
       li "To edit a translation please click on flag icon at \"Edit\" column."
@@ -61,10 +79,17 @@ ActiveAdmin.register Original, :as => 'Guideline' do
 
     inputs 'English' do
       input :tag
+      puts params
       if f.object.new_record?
-        input :helptext, :as => :html_editor
+        input :content, :as => :html_editor
       else
-        input :helptext, :as => :html_editor, :input_html => {:value => resource.diff_content }# resource.read_helpfile em
+        if params[:version]
+          previous = resource.versions.where(:id => params[:version]).take.reify.content 
+          puts resource.versions.where(:id => params[:version]).take
+          input :content, :as => :html_editor, :input_html => {:value => resource.content.html_diff(previous) }# resource.read_helpfile em
+        else
+          input :content, :as => :html_editor#, :input_html => {:value => resource.diff_content }# resource.read_helpfile em
+        end
         #input :helptext, :as => :html_editor, :input_html => {:value => File.read(resource.filename) }# resource.read_helpfile em
       end
       actions 

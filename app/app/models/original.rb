@@ -7,6 +7,9 @@ class Original < ActiveRecord::Base
   before_create :set_filename
   has_many :translations
   accepts_nested_attributes_for :translations
+
+  has_paper_trail
+
   def to_s
     return tag
   end
@@ -17,9 +20,9 @@ class Original < ActiveRecord::Base
 
   def write_helpfile
     return 0 if !tag
-    return 0 if helptext.empty?
+    return 0 if content.empty?
     file = File.open(filename, 'w')
-    file.write(helptext)
+    file.write(content)
     file.close
   end
 
@@ -28,14 +31,19 @@ class Original < ActiveRecord::Base
   end
 
   def has_diff_content?
-    File.read(filename)==helptext ? false : true
-  end
-  def diff_content
-    filecontent = File.read(filename)
-    modelcontent = helptext
-    Diffy::Diff.new(filecontent, modelcontent, :allow_empty_diff => false).to_s#(:html)
+    File.read(filename)==content ? false : true
   end
 
+  #def diff_content
+  #  filecontent = File.read(filename)
+  #  modelcontent = content
+  #  Diffy::Diff.new(filecontent, modelcontent, :allow_empty_diff => false).to_s#(:html)
+  #end
+
+  def to_nodes
+    require 'nokogiri'
+    Nokogiri::HTML(self.content)
+  end
 
 
 

@@ -38,7 +38,7 @@ files.each do |file|
   next if get_name(file)=='header' || get_name(file)=='footer'
     if get_lang(file) == 'en'
       begin 
-        Original.create(:tag => get_name(file), :helptext => File.read(file), :filename => file)
+        Original.create(:tag => get_name(file), :content => File.read(file), :filename => file)
       rescue
         puts file
       end
@@ -53,7 +53,7 @@ files.each do |file|
     if get_lang(file) != 'en'
       original = Original.where(:tag => get_name(file)).take
       if original
-        Translation.create(:language => get_lang(file), :help_text => File.read(file), :original_id => original.id, :filename => file)
+        Translation.create(:language => get_lang(file), :content => File.read(file), :original_id => original.id, :filename => file)
       end
     end
     #uts get_marcfield(file)

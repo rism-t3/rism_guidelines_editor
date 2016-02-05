@@ -5,6 +5,9 @@ class Original < ActiveRecord::Base
   scope :german, -> {joins(:translations).where('translations.language="de"')}
   after_save :write_helpfile
   before_create :set_filename
+  before_destroy do
+    self.versions.destroy_all
+  end
   has_many :translations
   accepts_nested_attributes_for :translations
 

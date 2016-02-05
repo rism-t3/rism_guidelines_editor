@@ -6,8 +6,9 @@ ActiveAdmin.register Translation do
   scope :german
   scope :italian
   scope :french
-  sidebar :versions, :only => :edit do
-    table_for PaperTrail::Version.where(:item_id => resource.id).order('id desc').limit(5) do # Use PaperTrail::Version if this throws an error
+  sidebar :versions, :only => :edit, :if => proc{!Translation.find(params[:id]).versions.where(:event => 'update').empty?} do
+    puts params
+    table_for PaperTrail::Version.where(:item_id => resource.id).where(:event => 'update').order('id desc').limit(5) do # Use PaperTrail::Version if this throws an error
       column "Item" do  |v| link_to v.id, edit_admin_translation_path(:version => v.id) end
       column "Modified at" do |v| v.created_at.to_s :long end
       column "Admin" do |v| link_to AdminUser.find(v.whodunnit).email, admin_admin_user_path(v.whodunnit) end

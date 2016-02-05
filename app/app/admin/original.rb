@@ -22,8 +22,9 @@ ActiveAdmin.register Original, :as => 'Guideline' do
     end
   end
 
-  sidebar :versions, :only => :edit do
-    table_for PaperTrail::Version.where(:item_id => resource.id).order('id desc').limit(5) do # Use PaperTrail::Version if this throws an error
+  sidebar :versions, :only => :edit, :if => proc{!Original.find(params[:id]).versions.where(:event => 'update').empty?} do
+  #sidebar :versions, :only => :edit do
+    table_for PaperTrail::Version.where(:item_id => resource.id).where(:event => 'update').order('id desc').limit(5) do # Use PaperTrail::Version if this throws an error
       column "Item" do  |v| link_to v.id, edit_admin_guideline_path(:version => v.id) end
       column "Modified at" do |v| v.created_at.to_s :long end
       column "Admin" do |v| link_to AdminUser.find(v.whodunnit).email, admin_admin_user_path(v.whodunnit) end

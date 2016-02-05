@@ -2,6 +2,9 @@ class Translation < ActiveRecord::Base
   before_create :set_filename
   after_save :write_helpfile
   belongs_to :original
+  before_destroy do
+      self.versions.destroy_all
+  end
 
   scope :german, -> {where(:language => 'de')}
   scope :italian, -> {where(:language => 'it')}

@@ -26,7 +26,8 @@ module HtmlDiff
           old = d.descriptor[1][:old]
           new = d.descriptor[1][:new]
           #next if new[:content] =~ /^\s*$/ || old[:content] =~ /^\s*$/
-          node = doc1.at_xpath(old[:xpath].gsub("/text()", ""))
+          #node = doc1.at_xpath(old[:xpath].gsub("/text()", ""))
+          node = doc1.at_xpath(old[:xpath])
           node.content = "--- #{old[:content]}"
           #node.name = "del"
           new_node = Nokogiri::XML::Node.new "p", node

@@ -17,12 +17,13 @@ ActiveAdmin.register Translation do
   end
 
   sidebar :help, :only => :edit do
-    ul do
-      li "To edit a translation please click on flag icon at \"Edit\" column."
-      li "To create a new translation click on flag icon at \"Add New Translation\" column."
-      li "Flag blinking indicates that the reference guideline is newer than the existent translation."
-      li "A view of the reference guideline is provided by edit and create action."
-    end
+    render :partial => "shared/help"
+#    ul do
+#      li "To edit a translation please click on flag icon at \"Edit\" column."
+#      li "To create a new translation click on flag icon at \"Add New Translation\" column."
+#      li "Flag blinking indicates that the reference guideline is newer than the existent translation."
+#      li "A view of the reference guideline is provided by edit and create action."
+#    end
   end
 
   controller do

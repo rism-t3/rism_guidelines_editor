@@ -14,6 +14,11 @@ ActiveAdmin.register Original, :as => 'Guideline' do
   filter :tag
 
   controller do 
+    def edit
+    flash[:warning] = "This is a previous version" if params["version"]
+      puts params
+      edit!
+    end
     def update
       #@versions = resource.versions
       update! do |format|
@@ -33,12 +38,7 @@ ActiveAdmin.register Original, :as => 'Guideline' do
   end
 
   sidebar :help do
-    ul do
-      li "To edit a translation please click on flag icon at \"Edit\" column."
-      li "To create a new translation click on flag icon at \"Add New Translation\" column."
-      li "Flag blinking indicates that the reference guideline is newer than the existent translation."
-      li "A view of the reference guideline is provided by edit and create action."
-    end
+    render :partial => "shared/help"
   end
   index do
     selectable_column

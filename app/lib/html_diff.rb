@@ -28,32 +28,46 @@ module HtmlDiff
           #next if new[:content] =~ /^\s*$/ || old[:content] =~ /^\s*$/
           #node = doc1.at_xpath(old[:xpath].gsub("/text()", ""))
           node = doc1.at_xpath(old[:xpath])
-          node.content = "--- #{old[:content]}"
+          node.content = "+++ #{old[:content]}"
           #node.name = "del"
           new_node = Nokogiri::XML::Node.new "p", node
           #node1 = Nokogiri::XML::Node.new "ins", node
-          new_node.content = "+++ #{new[:content]}"
+          new_node.content = "--- #{new[:content]}"
           #new_node << node1
-          node.add_previous_sibling(new_node)
+          node.add_next_sibling(new_node)
         when :insert
           old = d.descriptor[1]
           next if ActionView::Base.full_sanitizer.sanitize(old[:content]) =~ /^\s*$/
           node = doc1.at_xpath(old[:xpath])
           new_node = Nokogiri::XML::Node.new "p", node
           new_node.content = ActionView::Base.full_sanitizer.sanitize("--- #{old[:content]}")
+          old_node = Nokogiri::XML::Node.new "p", node
+          old_node.content = "+++ [empty]"
+ 
           if node.children.empty? || old[:position] >= node.children.length
+            puts "---"
+            puts node.children
+            
+            node << old_node
             node << new_node
           else
-            node.children[old[:position]].add_next_sibling(new_node)
+            puts "bbbbbbb"
+            node.children[old[:position]].add_previous_sibling(old_node)
+            node.children[old[:position]].add_previous_sibling(new_node)
           end
           #node.add_next_sibling(new_node)
           #TODO howto deal with inserts?
         when :delete
           next if d.node.content =~ /^\s*$/
           node = doc1.at_xpath(d.node.path)
+          new_node = Nokogiri::XML::Node.new "p", node
+          new_node.content = "--- [empty]"
+ 
           #node.name = "del"
           #node['style'] = "color: red;"
-          node.content = "--- #{d.node.content}"
+          node.content = "+++ #{d.node.content}"
+          node.add_previous_sibling(new_node)
+
         end
       end
     

@@ -15,7 +15,9 @@ ActiveAdmin.register Original, :as => 'Guideline' do
 
   controller do 
     def edit
-    flash[:warning] = "This is a previous version" if params["version"]
+      if params[:version]
+        flash.now[:warning] = "This is #{resource.versions.find(params[:version]).created_at} version"
+      end
       puts params
       edit!
     end
@@ -28,9 +30,10 @@ ActiveAdmin.register Original, :as => 'Guideline' do
   end
 
   sidebar :versions, :only => :edit, :if => proc{!Original.find(params[:id]).versions.where(:event => 'update').empty?} do
+    cnt = 0
   #sidebar :versions, :only => :edit do
     table_for PaperTrail::Version.where(:item_id => resource.id).where(:event => 'update').order('id desc').limit(5) do # Use PaperTrail::Version if this throws an error
-      column "Item" do  |v| link_to v.id, edit_admin_guideline_path(:version => v.id) end
+      column "Item" do  |v| link_to cnt+=1, edit_admin_guideline_path(:version => v.id) end
       column "Modified at" do |v| v.created_at.to_s :long end
       column "Admin" do |v| link_to AdminUser.find(v.whodunnit).email, admin_admin_user_path(v.whodunnit) end
       end

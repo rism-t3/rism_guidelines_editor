@@ -41,18 +41,18 @@ module HtmlDiff
           node = doc1.at_xpath(old[:xpath])
           new_node = Nokogiri::XML::Node.new "p", node
           new_node.content = ActionView::Base.full_sanitizer.sanitize("--- #{old[:content]}")
-          old_node = Nokogiri::XML::Node.new "p", node
-          old_node.content = "+++ [empty]"
+          #old_node = Nokogiri::XML::Node.new "p", node
+          #old_node.content = "+++ [empty]"
  
           if node.children.empty? || old[:position] >= node.children.length
             puts "---"
             puts node.children
             
-            node << old_node
+            #node << old_node
             node << new_node
           else
             puts "bbbbbbb"
-            node.children[old[:position]].add_previous_sibling(old_node)
+            #node.children[old[:position]].add_previous_sibling(old_node)
             node.children[old[:position]].add_previous_sibling(new_node)
           end
           #node.add_next_sibling(new_node)
@@ -60,13 +60,13 @@ module HtmlDiff
         when :delete
           next if d.node.content =~ /^\s*$/
           node = doc1.at_xpath(d.node.path)
-          new_node = Nokogiri::XML::Node.new "p", node
-          new_node.content = "--- [empty]"
+          #new_node = Nokogiri::XML::Node.new "p", node
+          #new_node.content = "--- [empty]"
  
           #node.name = "del"
           #node['style'] = "color: red;"
           node.content = "+++ #{d.node.content}"
-          node.add_previous_sibling(new_node)
+          #node.add_previous_sibling(new_node)
 
         end
       end

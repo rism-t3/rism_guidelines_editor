@@ -15,8 +15,8 @@ function enforceInactiveStates() {
 }
 
 $(document).ready( function() {
-  if ($("#translation_reference_helptext").length) {
-        var editor = new wysihtml5.Editor($("#translation_reference_helptext")[0], { 
+  if ($("#document_reference_helptext").length) {
+        var editor = new wysihtml5.Editor($("#document_reference_helptext")[0], { 
         stylesheets: window.AA.editor_config.stylesheets,
         parserRules: window.AA.editor_config.parserRules, 
         style: true,  

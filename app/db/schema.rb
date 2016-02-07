@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204100739) do
+ActiveRecord::Schema.define(version: 20160207113518) do
 
   create_table "active_admin_comments", force: true do |t|
     t.string   "namespace"
@@ -47,12 +47,25 @@ ActiveRecord::Schema.define(version: 20160204100739) do
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
 
-  create_table "originals", force: true do |t|
+  create_table "documents", force: true do |t|
     t.string   "tag"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "content"
     t.string   "filename"
+    t.integer  "template_id"
+    t.integer  "language_id"
+  end
+
+  add_index "documents", ["language_id"], name: "index_documents_on_language_id", using: :btree
+  add_index "documents", ["template_id"], name: "index_documents_on_template_id", using: :btree
+
+  create_table "languages", force: true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.string   "image"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "rich_rich_images", force: true do |t|
@@ -66,19 +79,6 @@ ActiveRecord::Schema.define(version: 20160204100739) do
     t.integer  "owner_id"
     t.text     "uri_cache"
   end
-
-  create_table "translations", force: true do |t|
-    t.string   "language"
-    t.string   "name"
-    t.string   "entity"
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "filename"
-    t.integer  "original_id"
-  end
-
-  add_index "translations", ["original_id"], name: "index_translations_on_original_id", using: :btree
 
   create_table "versions", force: true do |t|
     t.string   "item_type",                     null: false

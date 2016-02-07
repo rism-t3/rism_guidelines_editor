@@ -22,7 +22,8 @@ module App
     # config.i18n.default_locale = :de
   end
   HELP_FILES = "#{Rails.root.join("")}/../default/"
-  IMAGE_FILES = "#{Rails.root.join("")}/public/"
-  LANGUAGES = %w(de es fr it)
+  REFERENCE_LANGUAGE = "en"
+  #IMAGE_FILES = "#{Rails.root.join("")}/public/"
+  #LANGUAGES = %w(de es fr it)
 end
 

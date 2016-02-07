@@ -31,6 +31,12 @@ def get_name(filename)
  marc ? marc : ""
 end
 
+Language.create(:code =>'en', :name => 'English', :image => "en.png")
+Language.create(:code =>'fr', :name => 'French', :image => "fr.png")
+Language.create(:code =>'de', :name => 'German', :image => "de.png")
+Language.create(:code =>'it', :name => 'Italian', :image => "it.png")
+Language.create(:code =>'es', :name => 'Spanish', :image => "es.png")
+
 files = Dir["#{App::HELP_FILES}*.html"]
 
 files.each do |file|
@@ -38,7 +44,7 @@ files.each do |file|
   next if get_name(file)=='header' || get_name(file)=='footer'
     if get_lang(file) == 'en'
       begin 
-        Original.create(:tag => get_name(file), :content => File.read(file), :filename => file)
+        Document.create(:tag => get_name(file), :content => File.read(file), :filename => file, :language => Language.where(:code => 'en').take)
       rescue
         puts file
       end
@@ -51,9 +57,9 @@ files.each do |file|
   #Marc_Fields
   #if file =~ /^\S*\/[0-9]{3}\S+$/
     if get_lang(file) != 'en'
-      original = Original.where(:tag => get_name(file)).take
+      original = Document.where(:tag => get_name(file)).take
       if original
-        Translation.create(:language => get_lang(file), :content => File.read(file), :original_id => original.id, :filename => file)
+        Document.create(:tag => get_name(file), :language => Language.where(:code => get_lang(file)).take, :content => File.read(file), :template_id => original.id, :filename => file)
       end
     end
     #uts get_marcfield(file)

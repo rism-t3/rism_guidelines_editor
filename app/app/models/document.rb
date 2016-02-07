@@ -1,6 +1,7 @@
 class Document < ActiveRecord::Base
 
   after_save :set_filename, :write_helpfile
+  before_create :set_filename
 
   before_destroy do
     self.versions.destroy_all

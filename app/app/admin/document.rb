@@ -8,14 +8,24 @@ ActiveAdmin.register Document do
   permit_params :tag, :content, :template_id, :language_id
   config.sort_order = "updated_at_desc"
 
-  filter :content_or_translations_content_cont, :label => 'Guideline Text'
+  filter :content_cont, :label => 'Guideline Text'
   #filter :translations_language_cont, :label => 'Language', :as => :select, :collection => App::LANGUAGES
   filter :tag
 
   collection_action :index, :method => :get do
-    scope = Document.where(:template_id => nil)
-    @collection = scope.page() if params[:q].blank?
-    @search = scope.search(clean_search_params(params[:q]))
+    if params[:q]
+    params[:q]['template_id_null'] = true
+    puts params
+    else
+    params[:q] = {'template_id_null' => true}
+    end
+    #scope = Document.where(:template_id => nil).order(:updated_at => :desc)
+    scope = Document.ransack(params[:q]).result.order(:updated_at => :desc)
+    puts params
+    #@collection = scope.page() if params[:q].blank?
+    @collection = scope.page(params[:page]).per(20)
+    #@search = scope.search(clean_search_params(params[:q]))
+    @search = scope.ransack(params[:q])
     respond_to do |format|
       format.html {
         render "active_admin/resource/index"

@@ -38,7 +38,7 @@ class Document < ActiveRecord::Base
   end
 
   def self.is_sync?
-    #riginal
+    #original
   end
 
   def has_diff_content?

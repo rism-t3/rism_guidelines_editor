@@ -2,15 +2,11 @@ ActiveAdmin.register Document do
 
   config.clear_action_items!
   action_item :view, :if => proc { current_admin_user.can_edit?("en") } do
-          link_to 'New Document', new_admin_document_path
+          link_to 'New Document', new_admin_document_path(:document => {:language_id => Language.where(:code => App::REFERENCE_LANGUAGE).take.id})
   end
   
   permit_params :tag, :content, :template_id, :language_id
   config.sort_order = "updated_at_desc"
-
-  #before_filter do
-  #         params.permit!
-  #            end
 
   filter :content_or_translations_content_cont, :label => 'Guideline Text'
   #filter :translations_language_cont, :label => 'Language', :as => :select, :collection => App::LANGUAGES
@@ -28,12 +24,6 @@ ActiveAdmin.register Document do
   end
  
   controller do
-    #def index
-      #def scoped_collection
-       # Document.where(:template_id => nil)
-      #end
-      #@documents = Document.where(:template_id => nil)
-    #end
     def edit
       if params[:version]
         flash.now[:warning] = "This is #{resource.versions.find(params[:version]).created_at} version"
@@ -51,8 +41,7 @@ ActiveAdmin.register Document do
 
   sidebar :versions, :only => :edit, :if => proc{!Document.find(params[:id]).versions.where(:event => 'update').empty?} do
     cnt = 0
-  #sidebar :versions, :only => :edit do
-    table_for PaperTrail::Version.where(:item_id => resource.id).where(:event => 'update').order('id desc').limit(5) do # Use PaperTrail::Version if this throws an error
+    table_for PaperTrail::Version.where(:item_id => resource.id).where(:event => 'update').order('id desc').limit(5) do 
       column "Item" do  |v| link_to cnt+=1, edit_admin_document_path(:version => v.id) end
       column "Modified at" do |v| v.created_at.to_s :long end
       column "Admin" do |v| link_to AdminUser.find(v.whodunnit).email, admin_admin_user_path(v.whodunnit) end
@@ -63,12 +52,13 @@ ActiveAdmin.register Document do
   sidebar :help do
     render :partial => "shared/help"
   end
+
   index do
     selectable_column
     column :tag
     column 'Edit' do |r|
       r.translations.each.map do |t|
-      #r.translations.order(:language).each.map do |t|
+        #FIXME outdated
         if true
         #if !t.is_outdated?
           link_to image_tag(t.language.image, size: "16x16"), edit_admin_document_path(t) if current_admin_user.can_edit?(t)
@@ -96,12 +86,12 @@ ActiveAdmin.register Document do
   form do |f|
     inputs 'Documents' do
       input :tag
-      f.input :template_id
-      f.input :language_id#, :as => :hidden#, :include_blank => false
+      f.input :template_id, :as => :hidden
+      f.input :language_id, :as => :hidden
       f.input :reference_helptext, :as => :text if resource.template
       puts params
       if f.object.new_record?
-        if params[:document]
+        if params[:document][:template_id]
           input :content, :as => :html_editor, :input_html => {:value => "[TO TRANSLATE: ] #{File.read(Document.find(params[:document][:template_id]).filename)}"} 
         else
           input :content, :as => :html_editor
@@ -119,24 +109,4 @@ ActiveAdmin.register Document do
       actions 
     end
   end
-
-
-
-
-
-
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # permit_params :list, :of, :attributes, :on, :model
-  #
-  # or
-  #
-  # permit_params do
-  #   permitted = [:permitted, :attributes]
-  #   permitted << :other if resource.something?
-  #   permitted
-  # end
-
-
 end

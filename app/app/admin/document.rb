@@ -8,8 +8,9 @@ ActiveAdmin.register Document do
   permit_params :tag, :content, :template_id, :language_id
   config.sort_order = "updated_at_desc"
 
-  filter :content_cont, :label => 'Guideline Text'
-  #filter :translations_language_cont, :label => 'Language', :as => :select, :collection => App::LANGUAGES
+  filter :content_or_translations_content_cont, :label => 'Guideline Text'
+  
+  filter :language_id_or_translations_language_id_eq, :label => 'Language', :as => :select, :collection => Language.all
   filter :tag
 
   collection_action :index, :method => :get do

@@ -38,11 +38,25 @@ class Document < ActiveRecord::Base
     template.touch if template;
   end
 
-  def self.is_sync?
-    #FIXME look if content eq File.read
+  def self.synchronize
+    FileSystem.new.files.each do |file|
+      next if App::EXCLUDED_FILES.include?(file.filename)
+      unless Document.exists?(:filename => file.filename)
+        puts file.filename
+        Document.create(:tag => file.tag, :content => file.content, :language => Language.where(:code => tag.language).take)
+      end
+    end
+    Document.all.each do |document|
+      helpfile = Helpfile.new(document.filename)
+      if document.content != helpfile.content
+       document.update(:content => helpfile.content)
+       document.versions.last.update(:whodunnit => 1)
+      end
+    end
+    return "Documents synchronized!"
   end
 
-  def self.synchronize
+  def self.insert_new
     #FIXME look if pool is in synch
       Dir["#{App::HELP_FILES}*.html"]
   end

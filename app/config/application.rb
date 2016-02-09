@@ -23,6 +23,7 @@ module App
   end
   HELP_FILES = "#{Rails.root.join("")}/../default/"
   REFERENCE_LANGUAGE = "en"
+  EXCLUDED_FILES = YAML.load_file("#{Rails.root.to_s}/config/exclude.yml").split(" ").map{ |s| "#{HELP_FILES}#{s}"}
   #IMAGE_FILES = "#{Rails.root.join("")}/public/"
   #LANGUAGES = %w(de es fr it)
 end

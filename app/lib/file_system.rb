@@ -2,13 +2,12 @@ class FileSystem
   attr_accessor :files
 
   def initialize
-    @files = Dir["#{App::HELP_FILES}*.html"]
+    @files= Dir["#{App::HELP_FILES}*.html"].map {|file| Helpfile.new(file)}
   end
 
   def sort_by_reference_language
     result = []
-    files.each do |f|
-      file = Helpfile.new(f)
+    files.each do |file|
       if file.language == App::REFERENCE_LANGUAGE
         result.unshift(file)
       else

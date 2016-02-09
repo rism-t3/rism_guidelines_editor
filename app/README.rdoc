@@ -1,28 +1,14 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This app is a quick & dirty translation manager for ruby on rails.
+It watches html-files in a directory and uses Active Admin for editing them.
+Pretty old active_admin_editor is used as Rich Format Editor.
+Version control is included via paper trail.
 
-Things you may want to cover:
+== Installation
+1. The usual rails conf and bundle install crap :-)
+2. Set application.rb global variables
+3. rake db:seed
+4. rake dir:watch for observing the filesystem in background. 
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.

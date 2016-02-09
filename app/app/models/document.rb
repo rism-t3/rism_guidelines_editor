@@ -38,22 +38,25 @@ class Document < ActiveRecord::Base
     template.touch if template;
   end
 
-  def self.synchronize
-    FileSystem.new.files.each do |file|
-      next if App::EXCLUDED_FILES.include?(file.filename)
-      unless Document.exists?(:filename => file.filename)
-        puts file.filename
-        Document.create(:tag => file.tag, :content => file.content, :language => Language.where(:code => tag.language).take)
-      end
+  def self.add(str)
+    str = "#{App::HELP_FILES}#{File.basename(str)}"
+    file = Helpfile.new(str)
+    return "Excluded file" if App::EXCLUDED_FILES.include?(file.filename)
+    unless Document.exists?(:filename => file.filename)
+        Document.create(:tag => file.tag, :content => file.content, :language => Language.where(:code => file.language).take, :filename => str)
     end
-    Document.all.each do |document|
-      helpfile = Helpfile.new(document.filename)
-      if document.content != helpfile.content
-       document.update(:content => helpfile.content)
+    Logging.debug "Document #{str} added!"
+  end
+
+  def self.modify(str)
+    str = "#{App::HELP_FILES}#{File.basename(str)}"
+    helpfile = Helpfile.new(str)
+    document = Document.where(:filename => str).take
+    if document.content != helpfile.content
+      document.update(:content => helpfile.content)
        document.versions.last.update(:whodunnit => 1)
-      end
     end
-    return "Documents synchronized!"
+    Logging.debug "Document #{document.filename} modified!"
   end
 
   def self.insert_new

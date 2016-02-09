@@ -1,5 +1,5 @@
 class Language < ActiveRecord::Base
-  
+
   def self.codes
     Language.all.map(&:code)
   end
@@ -7,4 +7,5 @@ class Language < ActiveRecord::Base
   def self.reference
     Language.where(:code => App::REFERENCE_LANGUAGE).take
   end
+
 end

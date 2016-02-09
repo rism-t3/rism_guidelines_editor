@@ -39,7 +39,12 @@ class Document < ActiveRecord::Base
   end
 
   def self.is_sync?
-    #original
+    #FIXME look if content eq File.read
+  end
+
+  def self.synchronize
+    #FIXME look if pool is in synch
+      Dir["#{App::HELP_FILES}*.html"]
   end
 
   def has_diff_content?

@@ -1,24 +1,23 @@
 ActiveAdmin.register Document do
-
+  
   config.clear_action_items!
   action_item :view, :if => proc { current_admin_user.can_edit?("en") } do
-          link_to 'New Document', new_admin_document_path(:document => {:language_id => Language.where(:code => App::REFERENCE_LANGUAGE).take.id})
+    link_to 'New Document', new_admin_document_path(:document => {:language_id => Language.where(:code => App::REFERENCE_LANGUAGE).take.id})
   end
   
   permit_params :tag, :content, :template_id, :language_id
   config.sort_order = "updated_at_desc"
 
   filter :content_or_translations_content_cont, :label => 'Guideline Text'
-  
   filter :language_id_or_translations_language_id_eq, :label => 'Language', :as => :select, :collection => Language.all
   filter :tag
 
   collection_action :index, :method => :get do
     if params[:q]
-    params[:q]['template_id_null'] = true
-    puts params
+      params[:q]['template_id_null'] = true
+      puts params
     else
-    params[:q] = {'template_id_null' => true}
+      params[:q] = {'template_id_null' => true}
     end
     #scope = Document.where(:template_id => nil).order(:updated_at => :desc)
     scope = Document.ransack(params[:q]).result.order(:updated_at => :desc)
@@ -56,7 +55,7 @@ ActiveAdmin.register Document do
       column "Item" do  |v| link_to cnt+=1, edit_admin_document_path(:version => v.id) end
       column "Modified at" do |v| v.created_at.to_s :long end
       column "Admin" do |v| link_to AdminUser.find(v.whodunnit).email, admin_admin_user_path(v.whodunnit) end
-      end
+    end
     link_to "Return to current version", edit_admin_document_path
   end
 

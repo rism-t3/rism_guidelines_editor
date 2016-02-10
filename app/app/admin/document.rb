@@ -5,13 +5,15 @@ ActiveAdmin.register Document do
     link_to 'New Document', new_admin_document_path(:document => {:language_id => Language.where(:code => App::REFERENCE_LANGUAGE).take.id})
   end
   
+  #scope :marc
+
   permit_params :tag, :content, :template_id, :language_id
   config.sort_order = "updated_at_desc"
 
   filter :content_or_translations_content_cont, :label => 'Guideline Text'
   filter :language_id_or_translations_language_id_eq, :label => 'Language', :as => :select, :collection => Language.all
   filter :tag
-
+  
   collection_action :index, :method => :get do
     if params[:q]
       params[:q]['template_id_null'] = true
@@ -19,12 +21,9 @@ ActiveAdmin.register Document do
     else
       params[:q] = {'template_id_null' => true}
     end
-    #scope = Document.where(:template_id => nil).order(:updated_at => :desc)
     scope = Document.ransack(params[:q]).result.order(:updated_at => :desc)
     puts params
-    #@collection = scope.page() if params[:q].blank?
     @collection = scope.page(params[:page]).per(20)
-    #@search = scope.search(clean_search_params(params[:q]))
     @search = scope.ransack(params[:q])
     respond_to do |format|
       format.html {
@@ -32,7 +31,7 @@ ActiveAdmin.register Document do
       }
     end
   end
- 
+
   controller do
     def edit
       if params[:version]

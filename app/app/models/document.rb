@@ -10,6 +10,9 @@ class Document < ActiveRecord::Base
   belongs_to :template, class_name: 'Document', foreign_key: 'template_id' 
   has_many :translations, class_name: 'Document', foreign_key: 'template_id' 
   accepts_nested_attributes_for :template, :language
+  
+  scope :marc, ->{where('tag REGEXP ?', '[0-9]{3}')}
+  scope :en, ->{where(:language => Language.where(:code => App::REFERENCE_LANGUAGE).take)}
 
   has_paper_trail
 

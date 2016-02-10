@@ -18,6 +18,15 @@ module HtmlDiff
     end
 
     def diff
+      #FIXME needs much improvement; maybe with document builder
+      #Maybe showing selected version in editor and diffs in sidebar would be cleaner 
+      if doc1.children.size == 1 && doc2.children.size == 1
+        return " "
+      elsif doc1.children.size == 1
+        return doc2.children[1].children[0].children.to_s
+      elsif doc2.children.size == 1
+        return doc1.children[1].children[0].children.to_s
+      end
       res = Lorax.diff(doc1, doc2)
       res.deltas.each do |d|
         puts d.inspect
@@ -25,15 +34,10 @@ module HtmlDiff
         when :modify
           old = d.descriptor[1][:old]
           new = d.descriptor[1][:new]
-          #next if new[:content] =~ /^\s*$/ || old[:content] =~ /^\s*$/
-          #node = doc1.at_xpath(old[:xpath].gsub("/text()", ""))
-          node = doc1.at_xpath(old[:xpath])
+          node = doc1.at_xpath(new[:xpath])
           node.content = "+++ #{old[:content]}"
-          #node.name = "del"
           new_node = Nokogiri::XML::Node.new "p", node
-          #node1 = Nokogiri::XML::Node.new "ins", node
           new_node.content = "--- #{new[:content]}"
-          #new_node << node1
           node.add_next_sibling(new_node)
         when :insert
           old = d.descriptor[1]
@@ -41,36 +45,25 @@ module HtmlDiff
           node = doc1.at_xpath(old[:xpath])
           new_node = Nokogiri::XML::Node.new "p", node
           new_node.content = ActionView::Base.full_sanitizer.sanitize("--- #{old[:content]}")
-          #old_node = Nokogiri::XML::Node.new "p", node
-          #old_node.content = "+++ [empty]"
- 
-          if node.children.empty? || old[:position] >= node.children.length
+          if old[:position] == 1 && node.children.length == 2
+            node.children[1].children[0] << new_node
+          elsif node.children.empty? || old[:position] >= node.children.length
             puts "---"
             puts node.children
-            
-            #node << old_node
             node << new_node
           else
-            puts "bbbbbbb"
-            #node.children[old[:position]].add_previous_sibling(old_node)
             node.children[old[:position]].add_previous_sibling(new_node)
           end
-          #node.add_next_sibling(new_node)
-          #TODO howto deal with inserts?
         when :delete
           next if d.node.content =~ /^\s*$/
           node = doc1.at_xpath(d.node.path)
-          #new_node = Nokogiri::XML::Node.new "p", node
-          #new_node.content = "--- [empty]"
- 
-          #node.name = "del"
-          #node['style'] = "color: red;"
-          node.content = "+++ #{d.node.content}"
-          #node.add_previous_sibling(new_node)
-
+          if d.node.path == "/html"
+            next
+          else
+            node.content = "+++ #{d.node.content}"
+          end
         end
       end
-    
       print doc1.children[1].children[0].children.to_s
       return doc1.children[1].children[0].children.to_s
     end

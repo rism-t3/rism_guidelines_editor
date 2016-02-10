@@ -28,9 +28,6 @@ ActiveAdmin.register Document do
     else
       scope = Document.ransack(params[:q]).result.order(:updated_at => :desc)
     end
-#    else
-#      scope = Document.ransack(params[:q]).result.order(:updated_at => :desc)
-#    end
     puts params
     @collection = scope.page(params[:page]).per(20)
     @search = scope.ransack(params[:q])
@@ -49,6 +46,12 @@ ActiveAdmin.register Document do
       @documents = Document.all
       puts params
       edit!
+    end
+    def create
+      super do |success,failure|
+         success.html { redirect_to collection_path  }
+         failure.html { redirect_to collection_path  }
+      end
     end
     def update
       update! do |format|
@@ -86,7 +89,7 @@ ActiveAdmin.register Document do
       end.unshift(
       if current_admin_user.can_edit?(App::REFERENCE_LANGUAGE)
         if r.has_diff_content?
-          link_to image_tag(r.image, size: "16x16", :class => 'blink_image'), edit_admin_document_path(r)
+          link_to image_tag(r.language.image, size: "16x16", :class => 'blink_image'), edit_admin_document_path(r)
         else
           link_to image_tag(r.language.image, size: "16x16"), edit_admin_document_path(r)
         end

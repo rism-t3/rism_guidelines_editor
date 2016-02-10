@@ -1,7 +1,7 @@
 ActiveAdmin.register Document do
   
   config.clear_action_items!
-  action_item :view, :if => proc { current_admin_user.can_edit?("en") } do
+  action_item :view, :if => proc { current_admin_user.can_edit?(App::REFERENCE_LANGUAGE) } do
     link_to 'New Document', new_admin_document_path(:document => {:language_id => Language.where(:code => App::REFERENCE_LANGUAGE).take.id})
   end
   
@@ -11,7 +11,7 @@ ActiveAdmin.register Document do
   config.sort_order = "updated_at_desc"
 
   filter :content_or_translations_content_cont, :label => 'Guideline Text'
-  filter :language_id_or_translations_language_id_eq, :label => 'Language', :as => :select, :collection => Language.all
+  filter :language_id_or_translations_language_id_eq, :label => 'Language', :as => :select, :collection => proc { Language.pluck(:name, :id) }
   filter :tag
   
   collection_action :index, :method => :get do
@@ -82,9 +82,9 @@ ActiveAdmin.register Document do
         #FIXME outdated
         if true
         #if !t.is_outdated?
-          link_to image_tag(t.language.image, size: "16x16"), edit_admin_document_path(t) if current_admin_user.can_edit?(t)
+          link_to image_tag(t.language.image, size: "16x16"), edit_admin_document_path(t) if current_admin_user.can_edit?(t.language.code)
         else
-          link_to image_tag(t.language.image, size: "16x16", :class => 'blink_image'), edit_admin_document_path(t) if current_admin_user.can_edit?(t)
+          link_to image_tag(t.language.image, size: "16x16", :class => 'blink_image'), edit_admin_document_path(t) if current_admin_user.can_edit?(t.language.code)
         end
       end.unshift(
       if current_admin_user.can_edit?(App::REFERENCE_LANGUAGE)
@@ -99,7 +99,7 @@ ActiveAdmin.register Document do
     column :updated_at
     column :add_new_translation do |r|
       (Language.where.not(:code => App::REFERENCE_LANGUAGE) - r.translations.map(&:language)).each.map do |l|
-        link_to image_tag(l.image, size: "16x16"), new_admin_document_path(:document => {:tag => r.tag, :template_id => r.id, :language_id => l.id}) if current_admin_user.can_edit?(l) 
+        link_to image_tag(l.image, size: "16x16"), new_admin_document_path(:document => {:tag => r.tag, :template_id => r.id, :language_id => l.id}) if current_admin_user.can_edit?(l.code) 
       end.join(' ').html_safe
     end
   end

@@ -17,6 +17,7 @@ development:
   encoding: utf8
   username: root
   password: "start123"
+  host: localhost
   socket: /var/run/mysqld/mysqld.sock
 
 # Warning: The database defined as 'test' will be erased and
@@ -35,5 +36,6 @@ production:
   database: rism_production
   encoding: utf8
   username: rism
+  host: localhost
   password: "123"
   socket: /var/run/mysqld/mysqld.sock

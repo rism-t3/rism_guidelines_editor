@@ -70,9 +70,13 @@ ActiveAdmin.register Document do
     link_to "Return to current version", edit_admin_document_path
   end
 
-  sidebar :help do
+  sidebar :help, :if => proc{!params[:version]} do
     render :partial => "shared/help"
   end
+  sidebar :version, :if => proc{params[:version]} do
+    render :partial => "shared/versionhelp"
+  end
+
 
   index do
     selectable_column

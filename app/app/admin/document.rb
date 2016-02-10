@@ -21,7 +21,11 @@ ActiveAdmin.register Document do
     else
       params[:q] = {'template_id_null' => true}
     end
-    scope = Document.ransack(params[:q]).result.order(:updated_at => :desc)
+    if params[:order]=='tag_desc'
+      scope = Document.ransack(params[:q]).result.order(:tag => :asc)
+    else
+      scope = Document.ransack(params[:q]).result.order(:updated_at => :desc)
+    end
     puts params
     @collection = scope.page(params[:page]).per(20)
     @search = scope.ransack(params[:q])

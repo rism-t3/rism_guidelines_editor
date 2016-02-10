@@ -1,5 +1,5 @@
 class Document < ActiveRecord::Base
-
+  before_save :make_content_dos_compatible
   after_save :set_filename, :write_helpfile
   before_create :set_filename
 
@@ -23,7 +23,11 @@ class Document < ActiveRecord::Base
   def reference_helptext
     return File.read(template.filename)
   end
-  
+ 
+  def make_content_dos_compatible
+    content.gsub!("\r\n", "\n")
+  end
+
   def is_reference_document?
     language.code == App::REFERENCE_LANGUAGE ? true : false
   end

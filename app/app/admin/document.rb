@@ -54,6 +54,7 @@ ActiveAdmin.register Document do
       end
     end
     def update
+      resource.make_content_dos_compatible
       update! do |format|
        format.html { redirect_to collection_path } if resource.valid?
       end

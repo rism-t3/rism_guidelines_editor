@@ -9,4 +9,8 @@ class AdminUser < ActiveRecord::Base
     return trans == self.language ? true : false
   end
 
+  def is_admin?
+    !self.language || self.language.empty? ? true : false
+  end
+
 end

@@ -1,6 +1,6 @@
 ActiveAdmin.register AdminUser do
 
-  menu :if => proc{ !current_admin_user.language }, :label => "Admin"
+  menu :if => proc{ current_admin_user.is_admin? }, :label => "Admin"
   permit_params :email, :password, :password_confirmation, :language
 
   index do
@@ -21,7 +21,7 @@ ActiveAdmin.register AdminUser do
   form do |f|
     f.inputs "Admin Details" do
       f.input :email
-      f.input :language if !current_admin_user.language
+      f.input :language if current_admin_user.is_admin?
       f.input :password
       f.input :password_confirmation
     end

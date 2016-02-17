@@ -84,9 +84,7 @@ ActiveAdmin.register Document do
     column :tag
     column 'Edit' do |r|
       r.translations.each.map do |t|
-        #FIXME outdated
-        if true
-        #if !t.is_outdated?
+        if !t.is_outdated?
           link_to image_tag(t.language.image, size: "16x16"), edit_admin_document_path(t) if current_admin_user.can_edit?(t.language.code)
         else
           link_to image_tag(t.language.image, size: "16x16", :class => 'blink_image'), edit_admin_document_path(t) if current_admin_user.can_edit?(t.language.code)

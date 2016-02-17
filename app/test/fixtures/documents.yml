@@ -1,7 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  language: MyString
   tag: MyString
+  content: MyText
 
 two:
+  language: MyString
   tag: MyString
+  content: MyText
+
+
+

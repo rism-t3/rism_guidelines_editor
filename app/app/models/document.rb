@@ -75,4 +75,8 @@ class Document < ActiveRecord::Base
     File.read(filename)==content ? false : true
   end
 
+  def is_outdated?
+    return false if !template_id
+    return template.updated_at > self.updated_at ? true : false
+  end
 end

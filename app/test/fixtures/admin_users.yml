@@ -4,10 +4,14 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: 
+admin: 
   email: "goofy@google.com"
-# column: value
-#
-two: 
+  encrypted_password: abcdef1
+  language: ""
+  #password_salt:  efvfvffdv
+  #confirmed_at: <%= Time.now %>
+
+translator: 
   email: "miky@google.com"
-#  column: value
+  language: "french"
+

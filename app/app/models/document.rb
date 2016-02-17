@@ -72,7 +72,7 @@ class Document < ActiveRecord::Base
   end
 
   def has_diff_content?
-    File.read(filename)==content ? false : true
+    File.read(filename) == content ? false : true
   end
 
   def is_outdated?

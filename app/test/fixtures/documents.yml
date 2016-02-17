@@ -1,14 +1,16 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  language: MyString
-  tag: MyString
-  content: MyText
+english:
+  language: en
+  tag: 001
+  content: "<h4> this is content</h4>"
+  filename: "/home/dev/projects/guidelines/muscat-guidelines/app/../default/001_en.html"
 
-two:
-  language: MyString
-  tag: MyString
-  content: MyText
+german:
+  language: de
+  tag: 001
+  content: "<h4>hier steht inhalt</h4>"
+  filename: "/home/dev/projects/guidelines/muscat-guidelines/app/../default/001_de.html"
 
 
 

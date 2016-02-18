@@ -21,7 +21,7 @@ module App
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
   end
-  HELP_FILES = "#{Rails.root.join("")}/../default/"
+  HELP_FILES = "#{Rails.root.join("")}/../../muscat-guidelines/default/"
   REFERENCE_LANGUAGE = "en"
   EXCLUDED_FILES = YAML.load_file("#{Rails.root.to_s}/config/exclude.yml").split(" ").map{ |s| "#{HELP_FILES}#{s}"}
   #IMAGE_FILES = "#{Rails.root.join("")}/public/"

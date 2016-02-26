@@ -4,13 +4,13 @@ english:
   language: en
   tag: 001
   content: "<h4> this is content</h4>"
-  filename: "/home/dev/projects/guidelines/muscat-guidelines/app/../default/001_en.html"
+  filename: "/home/dev/projects/guidelines/muscat-guidelines/default/001_en.html"
 
 german:
   language: de
   tag: 001
   content: "<h4>hier steht inhalt</h4>"
-  filename: "/home/dev/projects/guidelines/muscat-guidelines/app/../default/001_de.html"
+  filename: "/home/dev/projects/guidelines/muscat-guidelines/default/001_de.html"
 
 
 

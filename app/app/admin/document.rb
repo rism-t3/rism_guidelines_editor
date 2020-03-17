@@ -109,7 +109,11 @@ ActiveAdmin.register Document do
 
   form do |f|
     inputs 'Documents' do
-      input :tag
+      if current_admin_user.is_admin?
+        input :tag
+      else
+        input :tag, input_html: { disabled: true  } 
+      end
       f.input :template_id, :as => :hidden
       f.input :language_id, :as => :hidden
       f.input :reference_helptext, :as => :text if resource.template
